@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Rozana Mandi</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:system-ui;background:#0f172a;color:white}
+.login{max-width:400px;margin:100px auto;background:white;color:black;padding:25px;border-radius:16px;text-align:center}
+.panel{max-width:900px;margin:20px auto;padding:15px;display:none}
+.card{background:#1e293b;padding:15px;border-radius:12px;margin-bottom:15px}
+input,select,button{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #334155}
+button{background:#16a34a;color:white;border:none;font-weight:bold;cursor:pointer}
+.rate-row{display:flex;gap:10px;margin:5px 0}
+.rate-row input{flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login" id="loginBox">
+<h2>🔐 ایڈمن پینل</h2>
+<p>Rozana Mandi Rate - Batkhela</p>
+<input type="password" id="pin" placeholder="پن ڈالیں - 1234">
+<button onclick="login()">لاگ ان</button>
+<p style="font-size:11px;color:#64748b;margin-top:10px">Default Pin: 1234</p>
+</div>
+
+<!-- Admin Panel -->
+<div class="panel" id="adminPanel">
+<h2>🤖 ایڈمن پینل - آٹو سسٹم کنٹرول</h2>
+
+<div class="grid">
+<div class="card">
+<h3>🤖 آٹو سسٹم</h3>
+<p>اسٹیٹس: <span id="autoStat" style="color:#22c55e">فعال</span></p>
+<p>آخری اپڈیٹ: <span id="lastUp">-</span></p>
+<label><input type="checkbox" id="autoToggle" checked onchange="toggleAuto()"> آٹو اپڈیٹ فعال رکھیں</label>
+<button onclick="forceAuto()">🔄 ابھی آٹو اپڈیٹ کریں</button>
+<button onclick="resetRates()" style="background:#dc2626">♻️ ریٹ ری سیٹ کریں</button>
+</div>
+
+<div class="card">
+<h3>⏰ فری ٹرائل</h3>
+<p>ٹرائل: 24 گھنٹے</p>
+<p>شروع: <span id="trialStart">-</span></p>
+<p>باقی: <span id="trialLeft">-</span></p>
+<button onclick="resetTrial()" style="background:#f59e0b">ٹرائل دوبارہ شروع کریں</button>
+<button onclick="extendTrial()" style="background:#3b82f6">24 گھنٹے بڑھائیں</button>
+</div>
+</div>
+
+<div class="card">
+<h3>📝 ریٹ تبدیل کریں - Batkhela Mandi</h3>
+<div id="editRates"></div>
+<button onclick="saveRates()">💾 ریٹ محفوظ کریں</button>
+</div>
+
+<div class="card">
+<h3>📊 آٹو لاگز</h3>
+<div id="logs" style="font-size:12px;background:#0f172a;padding:10px;border-radius:8px;max-height:150px;overflow:auto"></div>
+<button onclick="clearLogs()" style="background:#475569">لاگز صاف کریں</button>
+</div>
+
+<div class="card">
+<h3>🔑 پن تبدیل کریں</h3>
+<input type="password" id="newPin" placeholder="نیا پن">
+<button onclick="changePin()">پن تبدیل کریں</button>
+<button onclick="logout()" style="background:#475569;margin-top:20px">لاگ آؤٹ</button>
+</div>
+
+</div>
+
+<script>
+let ADMIN_PIN = localStorage.getItem('adminPin') || '1234';
+let rates = JSON.parse(localStorage.getItem('autoMandiRates') || 'null') || {
+  sabzi: [{name:"آلو", rate:"80-100"}, {name:"پیاز", rate:"70-90"}, {name:"ٹماٹر", rate:"120-150"}, {name:"بھنڈی", rate:"100-130"}],
+  fruit: [{name:"سیب", rate:"200-250"}, {name:"کیلا", rate:"120-150"}]
+};
+
+function login() {
+  if(document.getElementById('pin').value === ADMIN_PIN) {
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    loadAdmin();
+  } else { alert('❌ غلط پن! 1234 ڈالیں'); }
+}
+
+function loadAdmin() {
+  document.getElementById('lastUp').innerText = localStorage.getItem('lastAutoUpdate') || 'ابھی نہیں';
+  document.getElementById('trialStart').innerText = new Date(parseInt(localStorage.getItem('trialStart')||Date.now())).toLocaleString('ur-PK');
+  
+  let start = parseInt(localStorage.getItem('trialStart')||Date.now());
+  let left = 24 - (Date.now()-start)/(1000*60*60);
+  document.getElementById('trialLeft').innerText = left > 0 ? left.toFixed(1)+' گھنٹے' : 'ختم';
+
+  let html = '';
+  [...rates.sabzi, ...rates.fruit].forEach((r,i) => {
+    html += `<div class="rate-row"><input value="${r.name}" id="name${i}"><input value="${r.rate}" id="rate${i}"></div>`;
+  });
+  document.getElementById('editRates').innerHTML = html;
+
+  let logs = JSON.parse(localStorage.getItem('autoLogs')||'[]');
+  document.getElementById('logs').innerHTML = logs.map(l=>`<div>${l.time} - ${l.msg}</div>`).join('') || 'کوئی لاگ نہیں';
+}
+
+function saveRates() {
+  let all = [...rates.sabzi, ...rates.fruit];
+  all.forEach((r,i)=>{
+    r.name = document.getElementById('name'+i).value;
+    r.rate = document.getElementById('rate'+i).value;
+  });
+  localStorage.setItem('autoMandiRates', JSON.stringify(rates));
+  alert('✅ ریٹ محفوظ ہو گئے! auto.html پر دیکھیں');
+}
+
+function toggleAuto() {
+  let on = document.getElementById('autoToggle').checked;
+  localStorage.setItem('autoEnabled', on);
+  document.getElementById('autoStat').innerText = on ? 'فعال' : 'بند';
+  document.getElementById('autoStat').style.color = on ? '#22c55e' : '#ef4444';
+}
+
+function forceAuto() {
+  localStorage.setItem('lastAutoUpdate', new Date().toLocaleString('ur-PK'));
+  alert('🤖 آٹو اپڈیٹ کر دیا!');
+  loadAdmin();
+}
+
+function resetRates() { if(confirm('ریٹ ری سیٹ کریں؟')) { localStorage.removeItem('autoMandiRates'); location.reload(); } }
+function resetTrial() { localStorage.setItem('trialStart', Date.now().toString()); alert('✅ ٹرائل ری سیٹ!'); loadAdmin(); }
+function extendTrial() { let s=parseInt(localStorage.getItem('trialStart')||Date.now()); localStorage.setItem('trialStart', (s+24*60*60*1000).toString()); alert('✅ 24 گھنٹے بڑھا دیے!'); loadAdmin(); }
+function clearLogs() { localStorage.removeItem('autoLogs'); document.getElementById('logs').innerHTML='صاف'; }
+function changePin() { let n=document.getElementById('newPin').value; if(n.length>=4){ localStorage.setItem('adminPin', n); ADMIN_PIN=n; alert('✅ نیا پن: '+n);} else alert('کم از کم 4 ہندسے'); }
+function logout() { location.reload(); }
+</script>
+
+</body>
+</html>
