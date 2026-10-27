@@ -1,6 +1,15 @@
 {
-  "name": "Rozana Mandi Rate Pakistan",
-  "description": "پاکستان کی تمام غلہ اور سبزی منڈیوں کے روزانہ تازہ ترین ریٹ، شہر وار بھاؤ، اور VIP سروس۔ رابطہ نعیم: 03105423365",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "autoSystem": {
+    "enabled": true,
+    "description": "Jo hud apne rate lake or update kare",
+    "mandi": "Batkhela",
+    "autoUpdate": "1 hour"
+  },
+  "freeTrial": {
+    "hours": 24,
+    "message": "serif free trial serif 24houres tak Rahi"
+  },
+  "admin": {
+    "pin": "1234"
+  }
 }
