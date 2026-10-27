@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="50%" stop-color="#047857" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)" />
+  <!-- Wheat / Grain Emblem -->
+  <g transform="translate(156, 100) scale(0.4)">
+    <path d="M256 480 C256 360, 256 120, 256 32" stroke="#fef3c7" stroke-width="24" stroke-linecap="round"/>
+    <!-- Left Grains -->
+    <path d="M256 120 C180 90, 140 130, 160 180 C180 230, 230 210, 256 170" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+    <path d="M256 200 C180 170, 140 210, 160 260 C180 310, 230 290, 256 250" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+    <path d="M256 280 C180 250, 140 290, 160 340 C180 390, 230 370, 256 330" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+    <!-- Right Grains -->
+    <path d="M256 80 C332 50, 372 90, 352 140 C332 190, 282 170, 256 130" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+    <path d="M256 160 C332 130, 372 170, 352 220 C332 270, 282 250, 256 210" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+    <path d="M256 240 C332 210, 372 250, 352 300 C332 350, 282 330, 256 290" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+    <path d="M256 320 C332 290, 372 330, 352 380 C332 430, 282 410, 256 370" fill="url(#gold)" stroke="#78350f" stroke-width="8"/>
+  </g>
+  <!-- Text Label -->
+  <text x="256" y="440" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="44" fill="#ffffff" text-anchor="middle" letter-spacing="2">MANDI RATE</text>
+  <text x="256" y="475" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="24" fill="#6ee7b7" text-anchor="middle">5:00 AM UPDATE</text>
+</svg>
