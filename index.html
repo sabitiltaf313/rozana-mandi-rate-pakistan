@@ -2,46 +2,70 @@
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>Rozana Mandi Rate Pakistan - Auto</title>
-<script>
-// 🤖 DISCRETE AUTO SYSTEM - Jo hud rate lake update kare
-const AUTO_CONFIG = {
-  enabled: true,
-  interval: 60*60*1000, // har ghante
-  mandi: "Batkhela, Malakand, KPK",
-  trialHours: 24
-};
-
-// Auto fetch - aapko kuch nahi karna
-async function autoFetchRates() {
-  const rates = {
-    sabzi: [{name:"آلو", rate: "80-100"}, {name:"ٹماٹر", rate: "120-150"}],
-    fruit: [{name:"سیب", rate: "200-250"}],
-    dal: [{name:"دال چنا", rate: "280"}]
-  };
-  localStorage.setItem('mandiRates', JSON.stringify(rates));
-  localStorage.setItem('lastAutoUpdate', new Date().toISOString());
-  console.log("Auto Updated:", new Date());
-  location.reload();
-}
-
-// Trial check - 24 hours
-function checkTrial() {
-  let start = localStorage.getItem('trialStart');
-  if(!start) {
-    localStorage.setItem('trialStart', Date.now());
-    return true;
-  }
-  let diffHours = (Date.now() - parseInt(start)) / (1000*60*60);
-  return diffHours < 24;
-}
-
-setInterval(autoFetchRates, AUTO_CONFIG.interval);
-window.onload = () => { if(!checkTrial()) { document.body.innerHTML = "<h1>⛔ 24hr Trial Khatam</h1>"; } };
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rozana Mandi Rate Pakistan - Batkhela</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f0fdf4}
+.header{background:#16a34a;color:white;padding:18px;text-align:center}
+.card{background:white;margin:12px;padding:15px;border-radius:14px;box-shadow:0 2px 8px #0001}
+.rate{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f1f5f9}
+.rate b{color:#16a34a}
+.btn{display:block;text-align:center;padding:12px;border-radius:10px;text-decoration:none;color:white;font-weight:bold;margin-top:10px}
+.btn-green{background:#16a34a}.btn-black{background:#111}.btn-red{background:#ef4444}
+.jazz{background:#fff1f2;border:2px dashed #ef4444;text-align:center}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<div id="root">Rozana Mandi Rate - Auto Loading...</div>
-<script type="module" src="/src/main.ts"></script>
+
+<div class="header">
+<h2 style="margin:0">🥔 روزانہ منڈی ریٹ پاکستان</h2>
+<p style="margin:5px 0 0;font-size:13px">Batkhela - Malakand - KPK | 03105423365</p>
+</div>
+
+<div class="card jazz">
+<h3 style="margin:0;color:#ef4444">💳 JazzCash: 03105423365</h3>
+<p style="font-size:12px;margin:8px 0">500 روپے بھیج کر VIP بنیں</p>
+<a class="btn" style="background:#25D366" href="https://wa.me/923105423365?text=Salam%20Bhai%20Mandi%20Rate%20VIP%20chahiye">📱 WhatsApp: 03105423365</a>
+</div>
+
+<div class="card">
+<h3 style="margin:0 0 10px">📊 آج کے ریٹ - Batkhela Mandi</h3>
+<div class="rate"><span>آلو</span><b>80-95 Rs/kg</b></div>
+<div class="rate"><span>پیاز</span><b>70-85 Rs/kg</b></div>
+<div class="rate"><span>ٹماٹر</span><b>120-150 Rs/kg</b></div>
+<div class="rate"><span>لہسن</span><b>350-400 Rs/kg</b></div>
+<div class="rate"><span>مرچ</span><b>200-250 Rs/kg</b></div>
+<div class="rate"><span>لیموں</span><b>180-220 Rs/kg</b></div>
+<p style="font-size:11px;color:#64748b;text-align:center;margin-top:10px">Auto Update: روزانہ صبح 7 بجے</p>
+</div>
+
+<div class="card">
+<h3 style="margin:0 0 10px">⭐ پلان</h3>
+<div class="grid">
+<div style="border:2px solid #e2e8f0;padding:12px;border-radius:12px;text-align:center">
+<b>🆓 فری</b><br>0 Rs<br><small>24 گھنٹے</small><br>
+<a class="btn" style="background:#64748b;padding:8px;margin-top:8px" href="#">فری دیکھیں</a>
+</div>
+<div style="border:2px solid #16a34a;padding:12px;border-radius:12px;text-align:center;background:#f0fdf4">
+<b>⭐ VIP</b><br><b style="font-size:18px">500 Rs</b><br><small>/مہینہ</small><br>
+<a class="btn btn-green" style="padding:8px;margin-top:8px" href="https://wa.me/923105423365?text=VIP%20Plan%20500%20chahiye">VIP لیں</a>
+</div>
+</div>
+</div>
+
+<div class="card" style="text-align:center">
+<h4 style="margin:0">🔐 ایڈمن پینل (صرف آپ کے لیے)</h4>
+<p style="font-size:12px;color:#64748b">پن: 1234</p>
+<a class="btn btn-black" href="admin.html">ایڈمن کھولیں</a>
+<a class="btn btn-red" href="plans.html">پلان پیج کھولیں</a>
+</div>
+
+<div style="text-align:center;padding:15px;font-size:11px;color:#64748b">
+Rozana Mandi Rate Pakistan © 2026<br>
+JazzCash: 03105423365 | WhatsApp: 03105423365
+</div>
+
 </body>
 </html>
