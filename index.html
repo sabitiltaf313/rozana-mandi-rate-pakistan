@@ -2,47 +2,97 @@
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>روزانہ منڈی ریٹ پاکستان - Batkhela</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بٹ خیلہ منڈی ریٹ - 120 آئٹمز</title>
 <style>
-body{font-family:system-ui, -apple-system, sans-serif;background:#f0f2f5;margin:0;padding:10px}
-.header{background:#1b5e20;color:#fff;padding:16px;border-radius:14px;text-align:center}
-.card{background:#fff;padding:12px;margin:8px 0;border-radius:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 6px #0001}
-.price{font-weight:bold;color:#1b5e20;font-size:15px}
-.vip-box{background:#fff9c4;border:2px solid #fbc02d;padding:15px;border-radius:12px;margin:12px 0}
-.btn{width:100%;padding:12px;background:#25D366;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer}
-input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:15px}
-.badge{background:#e53935;color:#fff;padding:3px 8px;border-radius:10px;font-size:11px;margin-right:5px}
-.city-box{background:#e8f5e9;padding:12px;border-radius:10px;margin:10px 0;border:1px solid #a5d6a7}
+body{font-family:system-ui;background:#f5f5f5;margin:0;direction:rtl}
+.header{background:#166534;color:#fff;text-align:center;padding:20px;border-radius:0 0 20px 20px}
+.city-box{background:#dcfce7;border:1px solid #22c55e;margin:15px;padding:15px;border-radius:15px;text-align:center}
+.city-box select{width:100%;padding:10px;border-radius:10px;font-size:16px;margin-top:8px}
+.vip-banner{background:#fef9c3;border:2px solid #eab308;margin:15px;padding:15px;border-radius:15px;text-align:center}
+.items{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:15px}
+.card{background:#fff;padding:12px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);position:relative;overflow:hidden}
+.card.locked .price{filter:blur(7px)}
+.lock-overlay{position:absolute;inset:0;background:rgba(255,255,255,.75);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.lock-overlay button{background:#166534;color:#fff;border:none;padding:6px 18px;border-radius:20px}
+.price{font-weight:bold;color:#166534;font-size:18px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center;padding:15px}
+.modal.active{display:flex}
+.modal-box{background:#fff;width:100%;max-width:420px;border-radius:20px;padding:20px;text-align:center;max-height:90vh;overflow-y:auto}
+.plan{border:2px solid #eab308;border-radius:15px;padding:15px;margin:12px 0;background:#fffbeb}
+.input{width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;margin:8px 0;box-sizing:border-box}
+.success-msg{background:#dcfce7;color:#166534;padding:10px;border-radius:10px;margin-top:10px;display:none}
 </style>
 </head>
 <body>
-
 <div class="header">
-<h2 style="margin:0">🥬 بٹ خیلہ منڈی ریٹ - All Pakistan</h2>
-<p id="todayDate" style="margin:5px 0 0 0"></p>
-<p style="margin:5px 0 0 0;font-size:12px">120 آئٹمز | آٹومیٹک اپڈیٹ | آپ کو کچھ نہیں کرنا</p>
+<h1>🥬 بٹ خیلہ منڈی ریٹ - All Pakistan</h1>
+<p>120 آئٹمز | روزانہ آٹو اپڈیٹ</p>
 </div>
-
 <div class="city-box">
-<b>📍 اپنا شہر / صوبہ منتخب کریں:</b>
-<select id="citySelect" onchange="render()">
-<option value="Batkhela">KPK - بٹ خیلہ</option>
-<option value="Peshawar">KPK - پشاور</option>
-<option value="Mardan">KPK - مردان</option>
-<option value="Swat">KPK - سوات</option>
-<option value="Dir Lower">KPK - دیر لوئر</option>
-<option value="Lahore">Punjab - لاہور</option>
-<option value="Multan">Punjab - ملتان</option>
-<option value="Faisalabad">Punjab - فیصل آباد</option>
-<option value="Rawalpindi">Punjab - راولپنڈی</option>
-<option value="Sialkot">Punjab - سیالکوٹ</option>
-<option value="Islamabad">Islamabad</option>
-<option value="Karachi">Sindh - کراچی</option>
-<option value="Quetta">Balochistan - کوئٹہ</option>
-</select>
+📍 شہر منتخب کریں:
+<select id="city"><option>KPK - بٹ خیلہ</option><option>Punjab - لاہور</option><option>Sindh - کراچی</option><option>Balochistan - کوئٹہ</option></select>
+</div>
+<div class="vip-banner" id="vipBanner">
+🔓 <b>15 آئٹمز فری، باقی 105 کے لیے VIP</b><br>
+JazzCash <b>03105423365</b> پر 500 روپے
+<br><button onclick="openVIP()" id="vipBtn" style="margin-top:10px;background:#166534;color:#fff;border:none;padding:8px 20px;border-radius:20px;">VIP بنیں</button>
+<div id="vipStatus" style="display:none;margin-top:8px;font-weight:bold">✅ آپ VIP ممبر ہیں</div>
+</div>
+<div class="items" id="items"></div>
+
+<div class="modal" id="vipModal">
+<div class="modal-box">
+<span onclick="closeVIP()" style="float:left;font-size:24px;cursor:pointer">&times;</span>
+<h2>🔐 VIP Unlock کریں</h2>
+<p>15 فری ہیں، باقی 105 دیکھنے کے لیے VIP لیں</p>
+<div class="plan">
+<h3>VIP پلان - 1 مہینہ</h3>
+<p>صرف <b>500 روپے</b> میں تمام 120 آئٹمز</p>
+<p>JazzCash: <b>03105423365</b><br>نام: Omar Bhai</p>
+<button onclick="showTidBox()" style="background:#166534;color:#fff;width:100%;padding:10px;border:none;border-radius:10px;margin-top:10px">میں نے پیسے بھیج دیے ہیں</button>
+</div>
+<div id="tidBox" style="display:none;text-align:right;margin-top:15px">
+<label>Transaction ID (TID) لکھیں:</label>
+<input id="tidInput" class="input" placeholder="مثلاً 0012345678">
+<label>اپنا WhatsApp نمبر:</label>
+<input id="wpInput" class="input" placeholder="03XXXXXXXXX">
+<button onclick="submitTID()" style="background:#166534;color:#fff;width:100%;padding:12px;border:none;border-radius:10px">Confirm کریں</button>
+<p style="font-size:12px;color:#666">TID غلط ہوا تو VIP نہیں کھلے گا</p>
+<div id="success" class="success-msg">✅ درخواست بھیج دی گئی! ایڈمن 10 منٹ میں چیک کرے گا۔ (ڈیمو میں ابھی کھل گیا ہے)</div>
+</div>
+</div>
 </div>
 
-<div class="vip-box" id="vipBox">
-<h3 style="margin:0 0 8px 0">🔓 15 آئٹمز فری، باقی 105 کے لیے VIP</h3>
-<p style="font-size:13px;margin:0 0 8px 0">JazzCash <b>03105423365</b> پر 500 رو
+<script>
+const allItems=["ٹماٹر","پیاز","آلو","لہسن","ادرک","مرچ سبز","شملہ مرچ","بند گوبھی","پھول گوبھی","مٹر","بھنڈی","کریلا","بینگن","کدو","توری","ٹینڈا","گاجر","مولی","شلجم","پالک","میتھی","دھنیا","پودینہ","لیموں","کھیرا","لوکی","چقندر","اروی","شکر قندی","مکئی","لال مرچ","ہری مرچ","سلاد پتہ","کھمبی","ہرا پیاز","لہسن پھلی","مٹر پھلی","ہرا لہسن","پھلیاں","ساگ","باتھو","چولائی","سرسوں ساگ","کری پتہ","ہلدی تازہ","ٹماٹر دیسی","پیاز سفید","آلو نیا","پیاز لال","لیموں دیسی","آم","کیلا","سیب","انار","انگور","خربوزہ","تربوز","آڑو","خوبانی","ناشپاتی","امرود","پپیتا","اسٹرابیری","چیکو","لیچی","آم چونسہ","کینو","مالٹا","مسمی","امرود سفید","بیر","جامن","فالسہ","انار بدانا","انناس","ناریل","کھجور","اخروٹ","بادام","کشمش","مونگ پھلی","چنا","دال مونگ","دال مسور","دال ماش","دال چنا","چاول باسمتی","چاول ٹوٹا","گندم","مکئی دانہ","باجرہ","سرسوں","زیرہ","دھنیا خشک","ہلدی","مرچ لال","کالی مرچ","لونگ","الائچی","دار چینی","تیز پات","اجوائن","سونف","میتھی دانہ","کلونجی","سفید زیرہ","انڈہ فارمی","انڈہ دیسی","مرغی زندہ","مرغی گوشت","بکرا گوشت","گائے گوشت","مچھلی","دودھ","دہی","مکھن","گھی دیسی","چینی","گڑ","شہد","چائے پتی","نمک"];
+let isVIP=localStorage.getItem('isVIP')==='true';
+function render(){
+ const c=document.getElementById('items');c.innerHTML='';
+ allItems.forEach((name,i)=>{
+   const price=Math.floor(Math.random()*40)+80;
+   const locked=!isVIP && i>=15;
+   const d=document.createElement('div');d.className='card'+(locked?' locked':'');
+   d.innerHTML=`<div style="font-size:14px">${i+1}. ${name}</div><div class="price">${price} روپے / کلو</div>${locked?`<div class="lock-overlay">🔒 VIP<br><button onclick="openVIP()">Unlock</button></div>`:''}`;
+   c.appendChild(d);
+ });
+ if(isVIP){document.getElementById('vipStatus').style.display='block';document.getElementById('vipBtn').style.display='none';}
+}
+function openVIP(){document.getElementById('vipModal').classList.add('active')}
+function closeVIP(){document.getElementById('vipModal').classList.remove('active')}
+function showTidBox(){document.getElementById('tidBox').style.display='block'}
+function submitTID(){
+ const tid=document.getElementById('tidInput').value.trim();
+ const wp=document.getElementById('wpInput').value.trim();
+ if(tid.length<5){alert('صحیح TID لکھیں');return}
+ if(wp.length<10){alert('WhatsApp نمبر لکھیں');return}
+ localStorage.setItem('isVIP','true');
+ const msg=`New VIP Request:%0ATID: ${tid}%0AWhatsApp: ${wp}%0ACity: ${document.getElementById('city').value}`;
+ window.open(`https://wa.me/923105423365?text=${msg}`,'_blank');
+ document.getElementById('success').style.display='block';
+ setTimeout(()=>{isVIP=true;render();closeVIP()},1500);
+}
+render();
+</script>
+</body>
+</html>
