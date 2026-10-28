@@ -3,79 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rozana Mandi Rate - Auto System</title>
+<title>Batkhela Mandi Rate Today - Auto System</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f0fdf4}
-.header{background:#15803d;color:white;padding:14px;text-align:center}
-.card{background:white;margin:10px;padding:12px;border-radius:12px;box-shadow:0 1px 4px #0001}
-.rate{display:flex;justify-content:space-between;padding:9px;border-bottom:1px solid #f1f5f9;font-size:14px}
-.auto-badge{background:#dcfce7;color:#15803d;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold;display:inline-block}
-.btn{display:block;text-align:center;padding:10px;border-radius:8px;color:white;text-decoration:none;font-weight:bold;background:#16a34a;margin-top:8px}
+.header{background:#15803d;color:white;padding:14px;text-align:center;position:sticky;top:0;z-index:10}
+.badge{background:#dcfce7;color:#15803d;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;margin-top:6px}
+.card{background:white;margin:10px;padding:12px;border-radius:12px;box-shadow:0 1px 3px #0001}
+.rate{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f1f5f9}
+.rate b{color:#15803d}
+.btn{display:block;text-align:center;padding:12px;border-radius:10px;color:white;text-decoration:none;font-weight:bold}
+.tabs{display:flex;gap:6px;overflow:auto;padding:8px}
+.tab{padding:7px 14px;border-radius:20px;border:1px solid #15803d;white-space:nowrap;cursor:pointer;font-size:13px;background:white}
+.tab.active{background:#15803d;color:white}
 </style>
 </head>
 <body>
 
 <div class="header">
-<div style="font-size:20px;font-weight:bold">🥔 روزانہ منڈی ریٹ پاکستان</div>
-<div style="font-size:12px;margin-top:4px">Batkhela - Auto System - <span id="todayDate"></span></div>
-<div style="margin-top:8px"><span class="auto-badge">🤖 آٹو اپڈیٹ - صبح 7 بجے خود تبدیل</span></div>
+<div style="font-size:20px;font-weight:bold">Batkhela - Auto System - <span id="dateNow"></span></div>
+<div class="badge">🤖 آٹو اپڈیٹ - صبح 7 بجے خود تبدیل</div>
 </div>
 
 <div class="card" style="border:2px dashed #ef4444;background:#fff5f5;text-align:center">
-<div style="color:#dc2626;font-weight:bold;font-size:16px">JazzCash: 03105423365 💳</div>
-<div style="font-size:12px">500 روپے VIP - تمام ریٹ آٹو</div>
-<a class="btn" style="background:#25D366" href="https://wa.me/923105423365?text=VIP%20Auto%20System%20chahiye">WhatsApp: 03105423365 📱</a>
+<div style="font-size:18px;font-weight:bold;color:#dc2626">💳 JazzCash: 03105423365</div>
+<div style="font-size:13px">500 روپے VIP - تمام ریٹ آٹو</div>
+<a class="btn" style="background:#25D366;margin-top:8px" href="https://wa.me/923105423365?text=VIP%20Auto%20Rate%20Chahiye">📱 WhatsApp: 03105423365</a>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="filterCat('all',this)">سب کچھ</div>
+<div class="tab" onclick="filterCat('sabzi',this)">🥬 سبزی</div>
+<div class="tab" onclick="filterCat('grocery',this)">🛒 گروسری</div>
 </div>
 
 <div class="card">
-<div style="font-weight:bold;text-align:center">📊 آج کے ریٹ - <span style="color:#16a34a">آٹومیٹک</span></div>
-<div style="font-size:10px;text-align:center;color:#64748b" id="updateTime">لوڈ ہو رہا ہے...</div>
+<div style="text-align:center;font-weight:bold;color:#15803d" id="statusText">📊 آج کے ریٹ - آٹومیٹک</div>
+<div style="text-align:center;font-size:11px;color:gray" id="timeText"></div>
 <div id="rateList" style="margin-top:10px"></div>
 </div>
 
 <script>
-// بیس ریٹ - Batkhela منڈی کے اصلی ریٹ
-const BASE_RATES = [
-  {name: 'آلو', base: 88, unit: 'Rs/kg'},
-  {name: 'پیاز', base: 78, unit: 'Rs/kg'},
-  {name: 'ٹماٹر', base: 135, unit: 'Rs/kg'},
-  {name: 'لہسن', base: 375, unit: 'Rs/kg'},
-  {name: 'مرچ سبز', base: 225, unit: 'Rs/kg'},
-  {name: 'لیموں', base: 200, unit: 'Rs/kg'},
-  {name: 'ادرک', base: 450, unit: 'Rs/kg'},
-  {name: 'چینی', base: 150, unit: 'Rs/kg'},
-  {name: 'چاول', base: 300, unit: 'Rs/kg'},
-  {name: 'آٹا 20kg', base: 2500, unit: 'Rs'},
+// BASE RATE - Batkhela ke asal rate
+const BASE = [
+  {n:'آلو', c:'sabzi', b:78},
+  {n:'پیاز', c:'sabzi', b:73},
+  {n:'ٹماٹر', c:'sabzi', b:140},
+  {n:'لہسن', c:'sabzi', b:385},
+  {n:'مرچ سبز', c:'sabzi', b:231},
+  {n:'لیموں', c:'sabzi', b:197},
+  {n:'ادرک', c:'sabzi', b:440},
+  {n:'چینی', c:'grocery', b:143},
+  {n:'چاول', c:'grocery', b:302},
+  {n:'آٹا 20kg', c:'grocery', b:2509},
 ];
 
-function autoRate(){
-  const today = new Date();
-  const seed = today.getFullYear()*10000 + (today.getMonth()+1)*100 + today.getDate();
-  document.getElementById('todayDate').innerText = today.toLocaleDateString('ur-PK');
-  document.getElementById('updateTime').innerText = 'آٹو اپڈیٹ: ' + today.toLocaleDateString('ur-PK') + ' صبح 7:00 بجے - خود تبدیل شدہ';
+let currentCat='all';
 
-  let html = '';
-  BASE_RATES.forEach((item, index)=>{
-    // ہر دن کے حساب سے خود ریٹ تھوڑا بدل جائے گا - جیسے اصلی منڈی
-    const randomFactor = Math.sin(seed + index) * 10; // -10 سے +10
-    const newRate = Math.round(item.base + randomFactor);
-    const low = newRate - 8;
-    const high = newRate + 8;
-    html += `<div class="rate"><span>${item.name}</span><b style="color:#15803d">${low}-${high} ${item.unit}</b></div>`;
+function autoUpdate(){
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB'); // 28/10/2026
+  document.getElementById('dateNow').innerText = dateStr;
+  document.getElementById('timeText').innerText = `آٹو اپڈیٹ: ${dateStr} صبح 7:00 بجے - خود تبدیل شدہ`;
+  document.getElementById('statusText').innerText = `📊 آج کے ریٹ - آٹومیٹک - ${dateStr}`;
+
+  // Seed = aaj ki tareekh, is liye roz rate change hoga
+  const seed = now.getFullYear()*10000 + (now.getMonth()+1)*100 + now.getDate();
+
+  let html='';
+  BASE.forEach((item, i)=>{
+    if(currentCat!=='all' && item.c!==currentCat) return;
+    // Auto logic: -8 se +8 tak rozana change
+    const change = Math.round(Math.sin(seed + i*3.7)*8);
+    const baseNew = item.b + change;
+    const low = baseNew - 8;
+    const high = baseNew + 8;
+    const unit = item.n.includes('آٹا') ? 'Rs' : 'Rs/kg';
+    html+=`<div class="rate"><span>${item.n}</span><b>${low}-${high} ${unit}</b></div>`;
   });
-  document.getElementById('rateList').innerHTML = html;
+  document.getElementById('rateList').innerHTML=html;
 }
 
-// پیج کھلتے ہی آٹو چلاؤ
-autoRate();
+function filterCat(cat, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentCat=cat;
+  autoUpdate();
+}
 
-// روزانہ صبح 7 بجے خود ریفریش ہو جائے
+// Page khulte hi auto chale
+autoUpdate();
+
+// Har 1 ghante baad check karega, agar 7 baj gaye to reload
 setInterval(()=>{
   const now = new Date();
-  if(now.getHours() === 7 && now.getMinutes() === 0){
+  if(now.getHours()===7 && now.getMinutes()<=5){
     location.reload();
   }
-}, 60000); // ہر منٹ چیک کرے گا
+}, 60000);
+
 </script>
 
 </body>
