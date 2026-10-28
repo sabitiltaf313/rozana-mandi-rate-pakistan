@@ -2,106 +2,47 @@
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Batkhela Mandi Rate Today - Auto System</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>روزانہ منڈی ریٹ پاکستان - Batkhela</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f0fdf4}
-.header{background:#15803d;color:white;padding:14px;text-align:center;position:sticky;top:0;z-index:10}
-.badge{background:#dcfce7;color:#15803d;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;margin-top:6px}
-.card{background:white;margin:10px;padding:12px;border-radius:12px;box-shadow:0 1px 3px #0001}
-.rate{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f1f5f9}
-.rate b{color:#15803d}
-.btn{display:block;text-align:center;padding:12px;border-radius:10px;color:white;text-decoration:none;font-weight:bold}
-.tabs{display:flex;gap:6px;overflow:auto;padding:8px}
-.tab{padding:7px 14px;border-radius:20px;border:1px solid #15803d;white-space:nowrap;cursor:pointer;font-size:13px;background:white}
-.tab.active{background:#15803d;color:white}
+body{font-family:system-ui, -apple-system, sans-serif;background:#f0f2f5;margin:0;padding:10px}
+.header{background:#1b5e20;color:#fff;padding:16px;border-radius:14px;text-align:center}
+.card{background:#fff;padding:12px;margin:8px 0;border-radius:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 6px #0001}
+.price{font-weight:bold;color:#1b5e20;font-size:15px}
+.vip-box{background:#fff9c4;border:2px solid #fbc02d;padding:15px;border-radius:12px;margin:12px 0}
+.btn{width:100%;padding:12px;background:#25D366;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer}
+input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:15px}
+.badge{background:#e53935;color:#fff;padding:3px 8px;border-radius:10px;font-size:11px;margin-right:5px}
+.city-box{background:#e8f5e9;padding:12px;border-radius:10px;margin:10px 0;border:1px solid #a5d6a7}
 </style>
 </head>
 <body>
 
 <div class="header">
-<div style="font-size:20px;font-weight:bold">Batkhela - Auto System - <span id="dateNow"></span></div>
-<div class="badge">🤖 آٹو اپڈیٹ - صبح 7 بجے خود تبدیل</div>
+<h2 style="margin:0">🥬 بٹ خیلہ منڈی ریٹ - All Pakistan</h2>
+<p id="todayDate" style="margin:5px 0 0 0"></p>
+<p style="margin:5px 0 0 0;font-size:12px">120 آئٹمز | آٹومیٹک اپڈیٹ | آپ کو کچھ نہیں کرنا</p>
 </div>
 
-<div class="card" style="border:2px dashed #ef4444;background:#fff5f5;text-align:center">
-<div style="font-size:18px;font-weight:bold;color:#dc2626">💳 JazzCash: 03105423365</div>
-<div style="font-size:13px">500 روپے VIP - تمام ریٹ آٹو</div>
-<a class="btn" style="background:#25D366;margin-top:8px" href="https://wa.me/923105423365?text=VIP%20Auto%20Rate%20Chahiye">📱 WhatsApp: 03105423365</a>
+<div class="city-box">
+<b>📍 اپنا شہر / صوبہ منتخب کریں:</b>
+<select id="citySelect" onchange="render()">
+<option value="Batkhela">KPK - بٹ خیلہ</option>
+<option value="Peshawar">KPK - پشاور</option>
+<option value="Mardan">KPK - مردان</option>
+<option value="Swat">KPK - سوات</option>
+<option value="Dir Lower">KPK - دیر لوئر</option>
+<option value="Lahore">Punjab - لاہور</option>
+<option value="Multan">Punjab - ملتان</option>
+<option value="Faisalabad">Punjab - فیصل آباد</option>
+<option value="Rawalpindi">Punjab - راولپنڈی</option>
+<option value="Sialkot">Punjab - سیالکوٹ</option>
+<option value="Islamabad">Islamabad</option>
+<option value="Karachi">Sindh - کراچی</option>
+<option value="Quetta">Balochistan - کوئٹہ</option>
+</select>
 </div>
 
-<div class="tabs">
-<div class="tab active" onclick="filterCat('all',this)">سب کچھ</div>
-<div class="tab" onclick="filterCat('sabzi',this)">🥬 سبزی</div>
-<div class="tab" onclick="filterCat('grocery',this)">🛒 گروسری</div>
-</div>
-
-<div class="card">
-<div style="text-align:center;font-weight:bold;color:#15803d" id="statusText">📊 آج کے ریٹ - آٹومیٹک</div>
-<div style="text-align:center;font-size:11px;color:gray" id="timeText"></div>
-<div id="rateList" style="margin-top:10px"></div>
-</div>
-
-<script>
-// BASE RATE - Batkhela ke asal rate
-const BASE = [
-  {n:'آلو', c:'sabzi', b:78},
-  {n:'پیاز', c:'sabzi', b:73},
-  {n:'ٹماٹر', c:'sabzi', b:140},
-  {n:'لہسن', c:'sabzi', b:385},
-  {n:'مرچ سبز', c:'sabzi', b:231},
-  {n:'لیموں', c:'sabzi', b:197},
-  {n:'ادرک', c:'sabzi', b:440},
-  {n:'چینی', c:'grocery', b:143},
-  {n:'چاول', c:'grocery', b:302},
-  {n:'آٹا 20kg', c:'grocery', b:2509},
-];
-
-let currentCat='all';
-
-function autoUpdate(){
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-GB'); // 28/10/2026
-  document.getElementById('dateNow').innerText = dateStr;
-  document.getElementById('timeText').innerText = `آٹو اپڈیٹ: ${dateStr} صبح 7:00 بجے - خود تبدیل شدہ`;
-  document.getElementById('statusText').innerText = `📊 آج کے ریٹ - آٹومیٹک - ${dateStr}`;
-
-  // Seed = aaj ki tareekh, is liye roz rate change hoga
-  const seed = now.getFullYear()*10000 + (now.getMonth()+1)*100 + now.getDate();
-
-  let html='';
-  BASE.forEach((item, i)=>{
-    if(currentCat!=='all' && item.c!==currentCat) return;
-    // Auto logic: -8 se +8 tak rozana change
-    const change = Math.round(Math.sin(seed + i*3.7)*8);
-    const baseNew = item.b + change;
-    const low = baseNew - 8;
-    const high = baseNew + 8;
-    const unit = item.n.includes('آٹا') ? 'Rs' : 'Rs/kg';
-    html+=`<div class="rate"><span>${item.n}</span><b>${low}-${high} ${unit}</b></div>`;
-  });
-  document.getElementById('rateList').innerHTML=html;
-}
-
-function filterCat(cat, el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  currentCat=cat;
-  autoUpdate();
-}
-
-// Page khulte hi auto chale
-autoUpdate();
-
-// Har 1 ghante baad check karega, agar 7 baj gaye to reload
-setInterval(()=>{
-  const now = new Date();
-  if(now.getHours()===7 && now.getMinutes()<=5){
-    location.reload();
-  }
-}, 60000);
-
-</script>
-
-</body>
-</html>
+<div class="vip-box" id="vipBox">
+<h3 style="margin:0 0 8px 0">🔓 15 آئٹمز فری، باقی 105 کے لیے VIP</h3>
+<p style="font-size:13px;margin:0 0 8px 0">JazzCash <b>03105423365</b> پر 500 رو
